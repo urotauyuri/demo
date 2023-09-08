@@ -1,0 +1,65 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo start pre build.
+
+      # ログインユーザーの確認
+      - id
+      # OS情報の確認
+      - cat /etc/system-release
+      - cat /etc/os-release
+      # 各種パッケージの最新化
+      - yum update -y
+      # タイムゾーンの変更
+      - date
+      - cp /usr/share/zoneinfo/Japan /etc/localtime
+      - date
+      # Javaのインストール
+      - yum install -y java-17-amazon-corretto
+      - java -version
+      - /usr/sbin/alternatives --set java /usr/lib/jvm/java-17-amazon-corretto.aarch64/bin/java
+      - java -version
+      - /usr/sbin/alternatives --display java
+      # JAVA_HOME環境変数の設定
+      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.aarch64
+      # Gradleのインストール
+      - yum install zip unzip
+      - wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
+      - unzip -d /opt/gradle /tmp/gradle-8.2-bin.zip
+      - ls /opt/gradle/gradle-8.2
+      - gradle -version
+
+      - echo finish pre build.
+
+  build:
+    commands:
+      - echo start build.
+
+      # Spring Bootプロジェクトのビルド（jarの作成）
+      - gradle build
+      - ls -l build/libs
+
+      - echo finish build.
+
+  post_build:
+    commands:
+      - echo start post build.
+
+      # S3にアップロードするファイルを所定のディレクトリにコピー
+      - mkdir artifacts
+      - cp build/libs/demo-0.0.1-SNAPSHOT.jar artifacts
+      - cp codedeploy/appspec.yml artifacts
+      - cp codedeploy/demo-restart.sh artifacts
+
+      - echo finish post build.
+
+artifacts:
+  # S3にアップロードするファイルを指定
+  files:
+    - demo-0.0.1-SNAPSHOT.jar
+    - appspec.yml
+    - demo-restart.sh
+  # ベースディレクトリ
+  base-directory: artifacts
