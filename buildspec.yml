@@ -27,7 +27,7 @@ phases:
       # Gradleのインストール
       - yum install zip unzip
       - wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
-      - unzip -d /opt/gradle /tmp/gradle-8.2-bin.zip
+      - unzip -d /opt/gradle gradle-8.2-bin.zip
       - ls /opt/gradle/gradle-8.2
       - gradle -version
 
