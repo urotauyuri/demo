@@ -30,6 +30,10 @@ phases:
       - unzip -d /opt/gradle gradle-8.2-bin.zip
       - ls /opt/gradle/gradle-8.2
       - gradle -version
+      # 環境変数追加
+      - export GRADLE_HOME=/opt/gradle/gradle-8.2
+      - export PATH=${GRADLE_HOME}/bin:${PATH}
+      - gradle -version
 
       - echo finish pre build.
 
