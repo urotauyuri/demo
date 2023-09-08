@@ -50,8 +50,8 @@ phases:
       # S3にアップロードするファイルを所定のディレクトリにコピー
       - mkdir artifacts
       - cp build/libs/demo-0.0.1-SNAPSHOT.jar artifacts
-      - cp codedeploy/appspec.yml artifacts
-      - cp codedeploy/demo-restart.sh artifacts
+      # - cp codedeploy/appspec.yml artifacts
+      # - cp codedeploy/demo-restart.sh artifacts
 
       - echo finish post build.
 
@@ -59,7 +59,7 @@ artifacts:
   # S3にアップロードするファイルを指定
   files:
     - demo-0.0.1-SNAPSHOT.jar
-    - appspec.yml
-    - demo-restart.sh
+    # - appspec.yml
+    # - demo-restart.sh
   # ベースディレクトリ
   base-directory: artifacts
